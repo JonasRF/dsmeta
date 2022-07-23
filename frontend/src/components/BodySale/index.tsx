@@ -9,6 +9,7 @@ type Props = {
 
 const BodySale = ({ sale }: Props) => {
     return (
+
         <tr>
             <td className="tc992">{sale.id}</td>
             <td className="tc576">{new Date(sale.date).toLocaleDateString()}</td>
@@ -22,6 +23,7 @@ const BodySale = ({ sale }: Props) => {
                 </div>
             </td>
         </tr>
+
     );
 };
 

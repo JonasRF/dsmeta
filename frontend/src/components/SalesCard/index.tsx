@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Sale } from "../../types/Sales";
+import { Sale } from "../../types/Sale";
 import { springPage } from "../../types/vendor/spring";
 import { requestBackend } from "../../util/requests";
 import BodySale from "../BodySale";
@@ -20,14 +20,17 @@ function SalesCard() {
     const [page, setPage] = useState<springPage<Sale>>();
 
     const getSales = useCallback(() => {
+        const dmin = minDate.toISOString().slice(0, 10);
+        const dmax = maxDate.toISOString().slice(0, 10);
+
         const params: AxiosRequestConfig = {
             method: 'GET',
-            url: 'sales',
+            url: `sales?minDate=${dmin}&maxDate=${dmax}`,
         };
         requestBackend(params).then((response) => {
             setPage(response.data);
         });
-    }, []);
+    }, [minDate, maxDate]);
 
     useEffect(() => {
         getSales();
@@ -69,7 +72,7 @@ function SalesCard() {
                     </thead>
                     <tbody>
                         {page?.content.map((sale) => (
-                            <BodySale sale={sale} />
+                            <BodySale sale={sale} key={sale.id} />
                         ))}
 
                     </tbody>

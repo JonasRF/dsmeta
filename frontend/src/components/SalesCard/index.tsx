@@ -1,6 +1,11 @@
-import { useState } from "react";
+import axios, { AxiosRequestConfig } from "axios";
+import { useCallback, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Sale } from "../../types/Sales";
+import { springPage } from "../../types/vendor/spring";
+import { requestBackend } from "../../util/requests";
+import BodySale from "../BodySale";
 import NotificationButton from '../NotificationButton';
 import './styles.css';
 
@@ -11,6 +16,22 @@ function SalesCard() {
 
     const [minDate, setMinDate] = useState(min);
     const [maxDate, setMaxDate] = useState(max);
+
+    const [page, setPage] = useState<springPage<Sale>>();
+
+    const getSales = useCallback(() => {
+        const params: AxiosRequestConfig = {
+            method: 'GET',
+            url: 'sales',
+        };
+        requestBackend(params).then((response) => {
+            setPage(response.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getSales();
+    }, [getSales]);
 
     return (
         <div className="dsmeta-card">
@@ -47,58 +68,10 @@ function SalesCard() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className="tc992">#341</td>
-                            <td className="tc576">28/06/2022</td>
-                            <td>Anakin</td>
-                            <td className="tc992">15</td>
-                            <td className="tc992">11</td>
-                            <td>R$ 55300.00</td>
-                            <td>
-                                <div className="dsmeta-btn-container">
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tc992">#341</td>
-                            <td className="tc576">28/06/2022</td>
-                            <td>Anakin</td>
-                            <td className="tc992">15</td>
-                            <td className="tc992">11</td>
-                            <td>R$ 55300.00</td>
-                            <td>
-                                <div className="dsmeta-btn-container">
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tc992">#341</td>
-                            <td className="tc576">28/06/2022</td>
-                            <td>Anakin</td>
-                            <td className="tc992">15</td>
-                            <td className="tc992">11</td>
-                            <td>R$ 55300.00</td>
-                            <td>
-                                <div className="dsmeta-btn-container">
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tc992">#341</td>
-                            <td className="tc576">28/06/2022</td>
-                            <td>Anakin</td>
-                            <td className="tc992">15</td>
-                            <td className="tc992">11</td>
-                            <td>R$ 55300.00</td>
-                            <td>
-                                <div className="dsmeta-btn-container">
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
+                        {page?.content.map((sale) => (
+                            <BodySale sale={sale} />
+                        ))}
+
                     </tbody>
                 </table>
             </div>

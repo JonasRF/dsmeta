@@ -9,7 +9,6 @@ type Props = {
 
 const BodySale = ({ sale }: Props) => {
     return (
-
         <tr>
             <td className="tc992">{sale.id}</td>
             <td className="tc576">{new Date(sale.date).toLocaleDateString()}</td>
@@ -19,7 +18,7 @@ const BodySale = ({ sale }: Props) => {
             <td>{sale.amount.toFixed(2)}</td>
             <td>
                 <div className="dsmeta-btn-container">
-                    <NotificationButton />
+                    <NotificationButton saleId={sale.id} />
                 </div>
             </td>
         </tr>
